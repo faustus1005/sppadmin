@@ -290,6 +290,7 @@ function InitControls()
   MangAdmin:PrepareScript(ma_linkifiercolorbutton , nil                             , function() ShowColorPicker("linkifier") end)
   MangAdmin:PrepareScript(ma_applystylebutton     , nil                             , function() ApplyStyleChanges() end)
   MangAdmin:PrepareScript(ma_changeweatherbutton  , nil                             , function() ChangeWeather(UIDropDownMenu_GetSelectedValue(ma_weatherdropdown)) end)
+  MangAdmin:PrepareScript(ma_playerbotsbutton    , nil                             , function() PlayPlayerbotsSound() end)
 
 --[[Server Tab]]
   MangAdmin:PrepareScript(ma_announcebutton       , Locale["tt_AnnounceButton"]     , function() Announce(ma_announceeditbox:GetText()) end)

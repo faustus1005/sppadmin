@@ -176,3 +176,7 @@ function ChangeWeather(status)
     MangAdmin:LogAction("Changed weather ("..status..").")
   end
 end
+
+function PlayPlayerbotsSound()
+  PlaySoundFile(ROOT_PATH.."Sound\\Pissed.wav")
+end

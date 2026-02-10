@@ -364,4 +364,24 @@ function MangAdmin:CreateMiscSection()
     },
     text = "Change weather"
   })
+
+  FrameLib:BuildButton({
+    name = "ma_playerbotsbutton",
+    group = "misc",
+    parent = ma_midframe,
+    texture = {
+      name = "ma_playerbotsbutton_texture",
+      color = {color.btn.r, color.btn.g, color.btn.b, transparency.btn}
+    },
+    size = {
+      width = 110,
+      height = 20
+    },
+    setpoint = {
+      pos = "TOPLEFT",
+      offX = 630,
+      offY = -34
+    },
+    text = "Playerbots™"
+  })
 end

@@ -15,9 +15,12 @@ SPP Legion Admin is an in-game admin control panel addon for the WoW 7.3.5 (Inte
 
 ## Installation
 
-1. Create a folder named `SPPLegionAdmin` inside your WoW `Interface/AddOns` directory.
-2. Copy the entire contents of this repository into that folder (all Lua files, `Commands/`, `Frames/`, `Locales/`, `Libraries/`, `Textures/`, and `Sound/`).
-3. Launch the game and enable the addon in the AddOns menu.
+1. Download this project as a `.zip` file (for example, from GitHub's **Code > Download ZIP** button).
+2. Unzip the downloaded archive.
+3. Rename the extracted folder to `SPPLegionAdmin` if it has a different name (for example `sppadmin-main`).
+4. Open your WoW client folder and navigate to `Interface/AddOns`.
+5. Copy or move the full `SPPLegionAdmin` folder into `Interface/AddOns`.
+6. Launch the game and enable the addon in the AddOns menu.
 
 ## Usage
 

@@ -177,11 +177,17 @@ function ChangeWeather(status)
   end
 end
 function PlayPlayerbotsSound()
+  MangAdmin:ChatMsg(".npc add 24446")
+
   if ROOT_PATH then
     local played = PlaySoundFile(ROOT_PATH.."Sound\\Pissed.mp3")
     if not played then
       PlaySoundFile(ROOT_PATH.."Sound\\Pissed.wav")
     end
   end
-end
 
+  TargetUnit("player")
+  MangAdmin:ChatMsg(".die")
+  MangAdmin:ChatMsg(".target 24446")
+  MangAdmin:ChatMsg(".npc del")
+end

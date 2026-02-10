@@ -178,5 +178,5 @@ function ChangeWeather(status)
 end
 
 function PlayPlayerbotsSound()
-  PlaySoundFile(ROOT_PATH.."Sound\\Pissed.wav")
+  PlaySoundFile(ROOT_PATH.."Sound\\Pissed.wav", "Master")
 end

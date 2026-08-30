@@ -415,7 +415,7 @@ function FuBarPlugin:RegisterTablet()
 			func(...)
 
 			if FuBar and FuBar.IsHidingTooltipsInCombat and FuBar:IsHidingTooltipsInCombat() and InCombatLockdown() then
-				local frame = this.self.frame
+				local frame = self.frame
 				if self.blizzardTooltip then
 					if GameTooltip:IsOwned(self:IsMinimapAttached() and self.minimapFrame or self.frame) then
 						GameTooltip:Hide()
@@ -913,8 +913,10 @@ function FuBarPlugin:CreateBasicPluginFrame(name)
 	frame:SetPoint("CENTER", UIParent, "CENTER")
 	frame.self = self
 	if not frame_OnEnter then
-		function frame_OnEnter()
-			local self = this.self
+		function frame_OnEnter(frame)
+			frame = frame or this
+			local self = frame and frame.self
+			if not self then return end
 			if self.blizzardTooltip then
 				GameTooltip:SetOwner(self:IsMinimapAttached() and self.minimapFrame or self.frame, "ANCHOR_CURSOR")
 				self:UpdateTooltip()
@@ -926,8 +928,10 @@ function FuBarPlugin:CreateBasicPluginFrame(name)
 	end
 	frame:SetScript("OnEnter", frame_OnEnter)
 	if not frame_OnLeave then
-		function frame_OnLeave()
-			local self = this.self
+		function frame_OnLeave(frame)
+			frame = frame or this
+			local self = frame and frame.self
+			if not self then return end
 			if type(self.OnLeave) == "function" then
 				self:OnLeave()
 			end
@@ -938,48 +942,64 @@ function FuBarPlugin:CreateBasicPluginFrame(name)
 	end
 	frame:SetScript("OnLeave", frame_OnLeave)
 	if not frame_OnClick then
-	function frame_OnClick()
-			if this.self:IsMinimapAttached() and this.dragged then return end
-			if type(this.self.OnClick) == "function" then
-				this.self:OnClick(arg1)
+		function frame_OnClick(frame, button)
+			frame = frame or this
+			local self = frame and frame.self
+			if not self then return end
+			if self:IsMinimapAttached() and frame.dragged then return end
+			if type(self.OnClick) == "function" then
+				self:OnClick(button or arg1)
 			end
 		end
 	end
 	frame:SetScript("OnClick", frame_OnClick)
 	if not frame_OnDoubleClick then
-		function frame_OnDoubleClick()
-			if type(this.self.OnDoubleClick) == "function" then
-				this.self:OnDoubleClick(arg1)
+		function frame_OnDoubleClick(frame, button)
+			frame = frame or this
+			local self = frame and frame.self
+			if not self then return end
+			if type(self.OnDoubleClick) == "function" then
+				self:OnDoubleClick(button or arg1)
 			end
 		end
 	end
 	frame:SetScript("OnDoubleClick", frame_OnDoubleClick)
 	if not frame_OnMouseDown then
-		function frame_OnMouseDown()
-			if arg1 == "RightButton" and not IsShiftKeyDown() and not IsControlKeyDown() and not IsAltKeyDown() then
-				this.self:OpenMenu()
+		function frame_OnMouseDown(frame, button)
+			frame = frame or this
+			local self = frame and frame.self
+			if not self then return end
+			local clickedButton = button or arg1
+			if clickedButton == "RightButton" and not IsShiftKeyDown() and not IsControlKeyDown() and not IsAltKeyDown() then
+				self:OpenMenu()
 				return
 			else
 				HideDropDownMenu(1)
-				if type(this.self.OnMouseDown) == "function" then
-					this.self:OnMouseDown(arg1)
+				if type(self.OnMouseDown) == "function" then
+					self:OnMouseDown(clickedButton)
 				end
 			end
 		end
 	end
 	frame:SetScript("OnMouseDown", frame_OnMouseDown)
 	if not frame_OnMouseUp then
-		function frame_OnMouseUp()
-			if type(this.self.OnMouseUp) == "function" then
-				this.self:OnMouseUp(arg1)
+		function frame_OnMouseUp(frame, button)
+			frame = frame or this
+			local self = frame and frame.self
+			if not self then return end
+			if type(self.OnMouseUp) == "function" then
+				self:OnMouseUp(button or arg1)
 			end
 		end
 	end
 	frame:SetScript("OnMouseUp", frame_OnMouseUp)
 	if not frame_OnReceiveDrag then
-		function frame_OnReceiveDrag()
-			if (this.self:IsMinimapAttached() and not this.dragged) and type(this.self.OnReceiveDrag) == "function" then
-				this.self:OnReceiveDrag()
+		function frame_OnReceiveDrag(frame)
+			frame = frame or this
+			local self = frame and frame.self
+			if not self then return end
+			if (self:IsMinimapAttached() and not frame.dragged) and type(self.OnReceiveDrag) == "function" then
+				self:OnReceiveDrag()
 			end
 		end
 	end
@@ -999,26 +1019,35 @@ function FuBarPlugin:CreatePluginChildFrame(frameType, name, parent)
 	end
 	child.self = self
 	if not child_OnEnter then
-		function child_OnEnter(...)
-			if this.self.frame:GetScript("OnEnter") then
-				this.self.frame:GetScript("OnEnter")(...)
+		function child_OnEnter(child, ...)
+			child = child or this
+			local frame = child and child.self and child.self.frame
+			local script = frame and frame:GetScript("OnEnter")
+			if script then
+				script(frame, ...)
 			end
 		end
 	end
 	child:SetScript("OnEnter", child_OnEnter)
 	if not child_OnLeave then
-		function child_OnLeave(...)
-			if this.self.frame:GetScript("OnLeave") then
-				this.self.frame:GetScript("OnLeave")(...)
+		function child_OnLeave(child, ...)
+			child = child or this
+			local frame = child and child.self and child.self.frame
+			local script = frame and frame:GetScript("OnLeave")
+			if script then
+				script(frame, ...)
 			end
 		end
 	end
 	child:SetScript("OnLeave", child_OnLeave)
 	if child:HasScript("OnClick") then
 		if not child_OnClick then
-			function child_OnClick(...)
-				if this.self.frame:HasScript("OnClick") and this.self.frame:GetScript("OnClick") then
-					this.self.frame:GetScript("OnClick")(...)
+			function child_OnClick(child, ...)
+				child = child or this
+				local frame = child and child.self and child.self.frame
+				local script = frame and frame:HasScript("OnClick") and frame:GetScript("OnClick")
+				if script then
+					script(frame, ...)
 				end
 			end
 		end
@@ -1026,34 +1055,46 @@ function FuBarPlugin:CreatePluginChildFrame(frameType, name, parent)
 	end
 	if child:HasScript("OnDoubleClick") then
 		if not child_OnDoubleClick then
-			function child_OnDoubleClick(...)
-				if this.self.frame:HasScript("OnDoubleClick") and this.self.frame:GetScript("OnDoubleClick") then
-					this.self.frame:GetScript("OnDoubleClick")(...)
+			function child_OnDoubleClick(child, ...)
+				child = child or this
+				local frame = child and child.self and child.self.frame
+				local script = frame and frame:HasScript("OnDoubleClick") and frame:GetScript("OnDoubleClick")
+				if script then
+					script(frame, ...)
 				end
 			end
 		end
 		child:SetScript("OnDoubleClick", child_OnDoubleClick)
 	end
 	if not child_OnMouseDown then
-		function child_OnMouseDown(...)
-			if this.self.frame:HasScript("OnMouseDown") and this.self.frame:GetScript("OnMouseDown") then
-				this.self.frame:GetScript("OnMouseDown")(...)
+		function child_OnMouseDown(child, ...)
+			child = child or this
+			local frame = child and child.self and child.self.frame
+			local script = frame and frame:HasScript("OnMouseDown") and frame:GetScript("OnMouseDown")
+			if script then
+				script(frame, ...)
 			end
 		end
 	end
 	child:SetScript("OnMouseDown", child_OnMouseDown)
 	if not child_OnMouseUp then
-		function child_OnMouseUp(...)
-			if this.self.frame:HasScript("OnMouseUp") and this.self.frame:GetScript("OnMouseUp") then
-				this.self.frame:GetScript("OnMouseUp")(...)
+		function child_OnMouseUp(child, ...)
+			child = child or this
+			local frame = child and child.self and child.self.frame
+			local script = frame and frame:HasScript("OnMouseUp") and frame:GetScript("OnMouseUp")
+			if script then
+				script(frame, ...)
 			end
 		end
 	end
 	child:SetScript("OnMouseUp", child_OnMouseUp)
 	if not child_OnReceiveDrag then
-		function child_OnReceiveDrag(this)
-			if this.self.frame:HasScript("OnReceiveDrag") and this.self.frame:GetScript("OnReceiveDrag") then
-				this.self.frame:GetScript("OnReceiveDrag")()
+		function child_OnReceiveDrag(child, ...)
+			child = child or this
+			local frame = child and child.self and child.self.frame
+			local script = frame and frame:HasScript("OnReceiveDrag") and frame:GetScript("OnReceiveDrag")
+			if script then
+				script(frame, ...)
 			end
 		end
 	end

@@ -278,6 +278,12 @@ function MangLinkifier_SetItemRef(link, text, button)
   elseif ( strsub(link, 1, 16) == "lookupteledelete" ) then
     SendChatMessage(".tele del "..strsub(link, 18), "SAY", nil, nil)
     return;
+  elseif ( strsub(link, 1, 17) == "eventobject_entry" ) then
+    SendChatMessage(".eventobject list "..strsub(link, 19), "SAY", nil, nil)
+    return;
+  elseif ( strsub(link, 1, 11) == "eventobject" ) then
+    SendChatMessage(".go eventobject "..strsub(link, 13), "SAY", nil, nil)
+    return;
   end
   MangLinkifier_SetItemRef_Original(link, text, button);
 end

@@ -39,4 +39,4 @@ SPP Legion Admin is an in-game admin control panel addon for the WoW 7.3.5 (Inte
 
 ## Credits
 
-- MarsAdmin by SecretMars (GPLv3), derived from TrinityAdmin. See the original repository for upstream history and licensing: https://github.com/Secretmars/MarsAdmin.
+- MarsAdmin by SecretMars (GPLv3), derived from TrinityAdmin. See the original repository for upstream history and licensing: https://github.com/Secretmars/MarsAdmin. 
